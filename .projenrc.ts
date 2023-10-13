@@ -2,6 +2,8 @@ import { LernaProject } from 'lerna-projen';
 import { awscdk, Task } from 'projen';
 import { DependabotScheduleInterval } from 'projen/lib/github';
 import { Transform } from "projen/lib/javascript";
+import { dirname } from 'path';
+import { globSync } from 'glob';
 
 const CDK_VERSION = '2.94.0';
 const CDK_CONSTRUCTS_VERSION = '10.2.55';
@@ -35,6 +37,7 @@ const rootProject = new LernaProject({
     'lerna-projen',
     'ts-node',
     'typescript',
+    'glob@^10.3.6',
   ],
   peerDeps: [
     '@types/node@^16',
@@ -72,6 +75,10 @@ const rootProject = new LernaProject({
   projenrcTs: true,
 
   jest: false
+});
+
+rootProject.package.addField('resolutions', {
+  'wide-align': '1.1.5',
 });
 
 const fwkProject = new awscdk.AwsCdkConstructLibrary({
@@ -160,6 +167,23 @@ fwkProject.addTask('test:e2e', {
   description: 'Run framework end-to-end tests',
   exec: 'jest --passWithNoTests --updateSnapshot --group=e2e'
 });
+
+/**
+ * Task copy `resources` directories from `src` to `lib`
+ * This is to package YAML files part of the dist
+ */
+
+const copyResourcesToLibTask = fwkProject.addTask('copy-resources', {
+  description: 'Copy all resources directories from src to lib',
+});
+
+for (const from of globSync('src/**/resources', { cwd: './framework/', root: '.' })) {
+  const to = dirname(from.replace('src', 'lib'));
+  const cpCommand = `rsync -avr --exclude '*.ts' --exclude '*.js' ${from} ${to}`;
+  copyResourcesToLibTask.exec(cpCommand);
+};
+
+fwkProject.compileTask.exec('npx projen copy-resources');
 
 fwkProject.tasks.tryFind('release')!.prependSpawn(new Task('install:ci'));
 
