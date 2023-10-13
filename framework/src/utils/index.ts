@@ -8,5 +8,6 @@ export { EmrRuntimeVersion, SparkImage, EMR_DEFAULT_VERSION, DEFAULT_SPARK_IMAGE
 export { CICDStage, ApplicationStageProps, ApplicationStage } from './application-stage';
 export { ApplicationStackFactory } from './application-stack-factory';
 export { BucketUtils } from './bucket-utils';
+export { Utils } from './utils';
 
 
