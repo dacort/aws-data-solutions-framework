@@ -13,3 +13,4 @@ export { NetworkConfiguration, vpcBootstrap } from './utils/vpc-helper';
 export { PySparkApplicationPackage, PySparkApplicationPackageProps } from './processing';
 export { SparkJob, SparkJobProps, SparkEmrEksJob, SparkEmrEksJobProps, SparkEmrEksJobApiProps } from './processing/spark-job';
 export { SparkEmrServerlessJob, SparkEmrServerlessJobProps, SparkEmrServerlessJobApiProps } from './processing/spark-job';
+export { SparkEmrContainersRuntimeProps, SparkEmrContainersRuntime } from './processing/spark-runtime/emr-containers';
