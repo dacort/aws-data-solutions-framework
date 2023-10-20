@@ -3844,7 +3844,7 @@ const virtualCluster = emrEks.addEmrVirtualCluster(this, {
   eksNamespace: "data-platform",
 });
 
-const role = emrEks.createExecutionRole(stack, 'execRole', policy, 'data-platform', 'execRole');
+const role = emrEks.createExecutionRole(this, 'execRole', policy, 'data-platform', 'execRole');
 
 // EMR on EKS virtual cluster ID
 cdk.CfnOutput(this, 'VirtualClusterId',value = virtualCluster.attr_id)
